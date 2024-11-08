@@ -14,9 +14,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutUserStart,
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
-
 export default function Profile() {
   const fileRef = useRef(null);
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -27,6 +27,11 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
 
+  // firebase storage
+  // allow read;
+  // allow write: if
+  // request.resource.size < 2 * 1024 * 1024 &&
+  // request.resource.contentType.matches('image/.*')
 
   useEffect(() => {
     if (file) {
@@ -61,6 +66,7 @@ export default function Profile() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -77,6 +83,7 @@ export default function Profile() {
         dispatch(updateUserFailure(data.message));
         return;
       }
+
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
@@ -101,7 +108,21 @@ export default function Profile() {
     }
   };
 
+  const handleSignOut = async () => {
 
+    try {
+      dispatch(signOutUserStart())
+      const res = await fetch('/api/auth/signout');
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(data.message));
+    }
+  }
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -143,17 +164,17 @@ export default function Profile() {
         <input
           type='email'
           placeholder='email'
-          defaultValue={currentUser.email}
           id='email'
+          defaultValue={currentUser.email}
           className='border p-3 rounded-lg'
           onChange={handleChange}
         />
         <input
           type='password'
           placeholder='password'
+          onChange={handleChange}
           id='password'
           className='border p-3 rounded-lg'
-          onChange={handleChange}
         />
         <button
           disabled={loading}
@@ -161,12 +182,17 @@ export default function Profile() {
         >
           {loading ? 'Loading...' : 'Update'}
         </button>
-
       </form>
       <div className='flex justify-between mt-5'>
-      <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>Delete account </span>
-        <span className='text-red-700 cursor-pointer'>Sign out</span>
+        <span
+          onClick={handleDeleteUser}
+          className='text-red-700 cursor-pointer'
+        >
+          Delete account
+        </span>
+        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign out</span>
       </div>
+
       <p className='text-red-700 mt-5'>{error ? error : ''}</p>
       <p className='text-green-700 mt-5'>
         {updateSuccess ? 'User is updated successfully!' : ''}
