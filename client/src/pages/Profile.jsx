@@ -224,16 +224,16 @@ export default function Profile() {
       <div className='flex justify-between mt-5'>
         <span
           onClick={handleDeleteUser}
-          className='text-red-700 cursor-pointer'
+          className='text-red cursor-pointer'
         >
           Delete account
         </span>
-        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
+        <span onClick={handleSignOut} className='text-red cursor-pointer'>
           Sign out
         </span>
       </div>
 
-      <p className='text-red-700 mt-5'>{error ? error : ''}</p>
+      <p className='text-red mt-5'>{error ? error : ''}</p>
       <p className='text-green-700 mt-5'>
         {updateSuccess ? 'User is updated successfully!' : ''}
       </p>
@@ -271,12 +271,12 @@ export default function Profile() {
               <div className='flex flex-col item-center'>
                 <button
                   onClick={() => handleListingDelete(listing._id)}
-                  className='text-red-700 uppercase'
+                  className='text-red uppercase'
                 >
                   Delete
                 </button>
                 <Link to={`/update-listing/${listing._id}`}>
-                  <button className='text-green-700 uppercase'>Edit</button>
+                  <button className='text-dark-blue uppercase'>Edit</button>
                 </Link>
               </div>
             </div>
