@@ -62,7 +62,7 @@ export default function Home() {
         </div>
         <Link
           to={'/search'}
-          className='text-xs sm:text-sm text-blue-800 font-bold hover:underline'
+          className='text-xs sm:text-sm text-light-blue font-bold hover:underline'
         >
           Let's get started...
         </Link>
